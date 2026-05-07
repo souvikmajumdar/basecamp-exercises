@@ -150,3 +150,22 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.page-header {
+  margin-bottom: 1.75rem;
+}
+
+.page-header h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.025em;
+  margin-bottom: 0.25rem;
+}
+
+.page-header p {
+  color: #64748b;
+  font-size: 0.938rem;
+}
+</style>

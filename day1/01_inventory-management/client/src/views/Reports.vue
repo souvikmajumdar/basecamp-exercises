@@ -321,12 +321,30 @@ export default {
   padding: 0;
 }
 
+.page-header {
+  margin-bottom: 1.75rem;
+}
+
+.page-header h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.025em;
+  margin-bottom: 0.25rem;
+}
+
+.page-header p {
+  color: #64748b;
+  font-size: 0.938rem;
+}
+
 .card {
   background: white;
   border-radius: 12px;
   padding: 1.5rem;
+  border: 1px solid #e2e8f0;
   margin-bottom: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 
 .card-header {
@@ -424,7 +442,8 @@ export default {
   background: white;
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  border: 1px solid #e2e8f0;
   border-left: 4px solid #3b82f6;
 }
 

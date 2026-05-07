@@ -120,6 +120,16 @@ class CreatePurchaseOrderRequest(BaseModel):
     expected_delivery_date: str
     notes: Optional[str] = None
 
+class Task(BaseModel):
+    id: str
+    title: str
+    status: str
+    priority: Optional[str] = None
+
+class CreateTaskRequest(BaseModel):
+    title: str
+    priority: Optional[str] = None
+
 # API endpoints
 @app.get("/")
 def root():
@@ -303,6 +313,37 @@ def get_monthly_trends():
     result = list(months.values())
     result.sort(key=lambda x: x['month'])
     return result
+
+# In-memory task store
+_tasks: list = []
+_task_counter = [1]
+
+@app.get("/api/tasks", response_model=List[Task])
+def get_tasks():
+    return _tasks
+
+@app.post("/api/tasks", response_model=Task, status_code=201)
+def create_task(req: CreateTaskRequest):
+    task = {"id": str(_task_counter[0]), "title": req.title, "status": "pending", "priority": req.priority}
+    _task_counter[0] += 1
+    _tasks.append(task)
+    return task
+
+@app.delete("/api/tasks/{task_id}")
+def delete_task(task_id: str):
+    idx = next((i for i, t in enumerate(_tasks) if t["id"] == task_id), None)
+    if idx is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+    _tasks.pop(idx)
+    return {"ok": True}
+
+@app.patch("/api/tasks/{task_id}", response_model=Task)
+def toggle_task(task_id: str):
+    task = next((t for t in _tasks if t["id"] == task_id), None)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    task["status"] = "completed" if task["status"] == "pending" else "pending"
+    return task
 
 if __name__ == "__main__":
     import uvicorn
