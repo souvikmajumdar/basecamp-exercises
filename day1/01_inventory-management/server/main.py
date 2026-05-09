@@ -316,7 +316,7 @@ def get_monthly_trends():
 
 # In-memory task store
 _tasks: list = []
-_task_counter = [1]
+_task_counter = 1
 
 @app.get("/api/tasks", response_model=List[Task])
 def get_tasks():
@@ -324,8 +324,9 @@ def get_tasks():
 
 @app.post("/api/tasks", response_model=Task, status_code=201)
 def create_task(req: CreateTaskRequest):
-    task = {"id": str(_task_counter[0]), "title": req.title, "status": "pending", "priority": req.priority}
-    _task_counter[0] += 1
+    global _task_counter
+    task = {"id": str(_task_counter), "title": req.title, "status": "pending", "priority": req.priority}
+    _task_counter += 1
     _tasks.append(task)
     return task
 
