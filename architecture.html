@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Architecture — Partner Basecamp</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      line-height: 1.6;
+      padding: 40px 24px 80px;
+    }
+    .page { max-width: 900px; margin: 0 auto; }
+
+    header { margin-bottom: 48px; }
+    header h1 { font-size: 1.9rem; font-weight: 700; letter-spacing: -0.4px; }
+    header h1 span { color: #e36b20; }
+    header p { margin-top: 8px; color: #8b949e; font-size: 0.95rem; }
+
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: #58a6ff;
+      margin-bottom: 14px;
+    }
+
+    /* ── Tech stack ── */
+    .stack-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 40px; }
+    .pill {
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      border: 1px solid #30363d;
+      background: #21262d;
+      color: #c9d1d9;
+    }
+    .pill.blue   { background: #1f3a5a; border-color: #388bfd; color: #79c0ff; }
+    .pill.orange { background: #3d2810; border-color: #d97706; color: #fbbf24; }
+    .pill.green  { background: #1a3a2a; border-color: #3fb950; color: #7ee787; }
+
+    /* ── Data flow ── */
+    .flow-wrap { margin-bottom: 40px; }
+    .flow {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 28px 32px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow-x: auto;
+    }
+    .flow-node {
+      background: #21262d;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.82rem;
+      text-align: center;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .flow-node small { display: block; color: #8b949e; font-size: 0.72rem; margin-top: 2px; }
+    .flow-node.blue   { background: #1f3a5a; border-color: #388bfd; color: #79c0ff; }
+    .flow-node.orange { background: #3d2810; border-color: #d97706; color: #fbbf24; }
+    .arrow { padding: 0 10px; color: #484f58; font-size: 1.2rem; flex-shrink: 0; }
+
+    /* ── Session table ── */
+    .day-section { margin-bottom: 36px; }
+    .day-heading {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #e6edf3;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #21262d;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.84rem; margin-bottom: 40px; }
+    th {
+      text-align: left;
+      padding: 9px 14px;
+      background: #161b22;
+      border: 1px solid #30363d;
+      color: #8b949e;
+      font-weight: 600;
+      font-size: 0.73rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    td {
+      padding: 10px 14px;
+      border: 1px solid #21262d;
+      vertical-align: top;
+    }
+    tr:nth-child(even) td { background: #0d1117; }
+    tr:nth-child(odd)  td { background: #161b22; }
+    .badge {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+    .badge.build  { background: #1f3a5a; color: #79c0ff; }
+    .badge.hack   { background: #3d2810; color: #fbbf24; }
+    .badge.mat    { background: #21262d; color: #8b949e; }
+    code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      background: #21262d;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 0.8em;
+      color: #e3b341;
+    }
+
+    /* ── File tree ── */
+    .tree {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 20px 24px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.8rem;
+      line-height: 1.9;
+      margin-bottom: 40px;
+      color: #c9d1d9;
+    }
+    .tree .dir  { color: #79c0ff; }
+    .tree .note { color: #484f58; margin-left: 8px; font-style: italic; }
+
+    footer { margin-top: 20px; padding-top: 24px; border-top: 1px solid #21262d; color: #484f58; font-size: 0.78rem; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <h1>Partner <span>Basecamp</span> — Architecture</h1>
+    <p>Session materials overview: structure, tech stack, and data flow.</p>
+  </header>
+
+  <!-- Tech Stack -->
+  <p class="section-label">Tech Stack</p>
+  <div class="stack-row">
+    <span class="pill blue">Python 3.x</span>
+    <span class="pill blue">Jupyter Notebooks</span>
+    <span class="pill orange">Anthropic Python SDK</span>
+    <span class="pill orange">Claude API</span>
+    <span class="pill green">Google Colab</span>
+    <span class="pill">python-dotenv</span>
+    <span class="pill">ANTHROPIC_API_KEY via .env</span>
+  </div>
+
+  <!-- Data Flow -->
+  <p class="section-label">Data Flow</p>
+  <div class="flow-wrap">
+    <div class="flow">
+      <div class="flow-node">
+        Notebook cell
+        <small>student runs</small>
+      </div>
+      <div class="arrow">→</div>
+      <div class="flow-node">
+        <code>.env</code> / Colab secret
+        <small>loads API key</small>
+      </div>
+      <div class="arrow">→</div>
+      <div class="flow-node blue">
+        Anthropic SDK
+        <small>client.messages.create()</small>
+      </div>
+      <div class="arrow">→</div>
+      <div class="flow-node orange">
+        Claude API
+        <small>HTTPS</small>
+      </div>
+      <div class="arrow">→</div>
+      <div class="flow-node">
+        Response
+        <small>text / tool_use / stream</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- File Tree -->
+  <p class="section-label">Project Structure</p>
+  <div class="tree">
+    <span class="dir">basecamp-exercises/</span><br>
+    ├── <span class="dir">day1/</span><br>
+    │   ├── <span class="dir">01_inventory-management/</span><span class="note">Claude Code workshop app (build-along)</span><br>
+    │   ├── <span class="dir">02_developer-platform/</span><span class="note">notebook.ipynb + solution (build-along)</span><br>
+    │   ├── <span class="dir">03_prompt-rescue/</span><span class="note">notebook.ipynb + solution (build-along)</span><br>
+    │   └── <span class="dir">04_diagnosing-ai-problems/</span><span class="note">notebook.ipynb + solution (session materials)</span><br>
+    ├── <span class="dir">day2/</span><br>
+    │   ├── <span class="dir">01_evals/</span><span class="note">notebook.ipynb + solution (build-along)</span><br>
+    │   ├── <span class="dir">02_inference-optimization/</span><span class="note">notebook.ipynb + solution (build-along)</span><br>
+    │   ├── <span class="dir">03_context-engineering/</span><span class="note">notebook.ipynb + solution (build-along)</span><br>
+    │   └── <span class="dir">04_agent-build-hackathon/</span><span class="note">notebook.ipynb (minihack)</span><br>
+    ├── README.md<br>
+    └── .env<span class="note">ANTHROPIC_API_KEY</span>
+  </div>
+
+  <!-- Session Table -->
+  <p class="section-label">Sessions</p>
+
+  <div class="day-section">
+    <div class="day-heading">Day 1</div>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Session</th>
+          <th>Type</th>
+          <th>Artifacts</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>01</td>
+          <td>Inventory Management</td>
+          <td><span class="badge build">Build-Along</span></td>
+          <td>Claude Code workshop app</td>
+        </tr>
+        <tr>
+          <td>02</td>
+          <td>Developer Platform</td>
+          <td><span class="badge build">Build-Along</span></td>
+          <td><code>notebook.ipynb</code>, <code>notebook_solution.ipynb</code></td>
+        </tr>
+        <tr>
+          <td>03</td>
+          <td>Prompt Rescue</td>
+          <td><span class="badge build">Build-Along</span></td>
+          <td><code>notebook.ipynb</code>, <code>notebook_solution.ipynb</code></td>
+        </tr>
+        <tr>
+          <td>04</td>
+          <td>Diagnosing AI Problems</td>
+          <td><span class="badge mat">Session Materials</span></td>
+          <td><code>notebook.ipynb</code>, <code>notebook_solution.ipynb</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="day-section">
+    <div class="day-heading">Day 2</div>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Session</th>
+          <th>Type</th>
+          <th>Artifacts</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>01</td>
+          <td>Evals</td>
+          <td><span class="badge build">Build-Along</span></td>
+          <td><code>notebook.ipynb</code>, <code>notebook_solution.ipynb</code></td>
+        </tr>
+        <tr>
+          <td>02</td>
+          <td>Inference Optimization</td>
+          <td><span class="badge build">Build-Along</span></td>
+          <td><code>notebook.ipynb</code>, <code>notebook_solution.ipynb</code></td>
+        </tr>
+        <tr>
+          <td>03</td>
+          <td>Context Engineering</td>
+          <td><span class="badge build">Build-Along</span></td>
+          <td><code>notebook.ipynb</code>, <code>notebook_solution.ipynb</code></td>
+        </tr>
+        <tr>
+          <td>04</td>
+          <td>Agent Build Hackathon</td>
+          <td><span class="badge hack">MiniHack</span></td>
+          <td><code>notebook.ipynb</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer>Generated 2026-05-07 &nbsp;·&nbsp; Partner Basecamp Exercises</footer>
+
+</div>
+</body>
+</html>

@@ -40,5 +40,23 @@ Each folder has its own README with the exercise description and step-by-step ru
 
 ---
 
+## Inventory Management App (Day 1)
+
+The main workshop app is a full-stack demo: Vue 3 frontend + Python FastAPI backend.
+
+**Stack**: Vue 3 + Vite (port 3000) · Python FastAPI (port 8001) · in-memory mock data
+
+```bash
+# Backend
+cd day1/01_inventory-management/server
+uv run python main.py
+
+# Frontend (separate terminal)
+cd day1/01_inventory-management/client
+npm install && npm run dev
+```
+
+---
+
 ## API key
 You'll need an Anthropic API key for all build-along sessions. Each notebook has a cell near the top where you paste it in.

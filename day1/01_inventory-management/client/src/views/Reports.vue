@@ -325,8 +325,9 @@ export default {
   background: white;
   border-radius: 12px;
   padding: 1.5rem;
+  border: 1px solid #e2e8f0;
   margin-bottom: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 
 .card-header {
@@ -424,7 +425,8 @@ export default {
   background: white;
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  border: 1px solid #e2e8f0;
   border-left: 4px solid #3b82f6;
 }
 
